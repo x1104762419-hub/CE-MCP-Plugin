@@ -192,7 +192,7 @@ UINT_PTR ParseAddress(const char* addressStr) {
     return (UINT_PTR)strtoull(addressStr, NULL, 16);
 }
 
-// 辅助函数：读取内存
+// 辅助函数：读取内�?
 BOOL ReadMemory(UINT_PTR address, char* type, void* buffer) {
     if (Exported.ReadProcessMemory == NULL) {
         return FALSE;
@@ -214,7 +214,7 @@ BOOL ReadMemory(UINT_PTR address, char* type, void* buffer) {
     } else if (strcmp(type, "int64") == 0 || strcmp(type, "INT64") == 0) {
         result = (*Exported.ReadProcessMemory)(*Exported.OpenedProcessHandle, (LPCVOID)address, buffer, 8, &bytesRead);
     } else if (strcmp(type, "string") == 0 || strcmp(type, "STRING") == 0) {
-        // 读取字符串，最多256字节
+        // 读取字符串，最�?56字节
         result = (*Exported.ReadProcessMemory)(*Exported.OpenedProcessHandle, (LPCVOID)address, buffer, 256, &bytesRead);
         if (result) {
             // 确保字符串以null结尾
@@ -225,7 +225,7 @@ BOOL ReadMemory(UINT_PTR address, char* type, void* buffer) {
     return result && bytesRead > 0;
 }
 
-// 辅助函数：写入内存
+// 辅助函数：写入内�?
 BOOL WriteMemory(UINT_PTR address, const char* valueStr, const char* type) {
     if (Exported.WriteProcessMemory == NULL) {
         return FALSE;
@@ -257,7 +257,7 @@ BOOL WriteMemory(UINT_PTR address, const char* valueStr, const char* type) {
         INT64 value = _strtoi64(valueStr, NULL, 0);
         result = writeMem(*Exported.OpenedProcessHandle, (LPVOID)address, &value, 8, &bytesWritten);
     } else if (strcmp(type, "string") == 0 || strcmp(type, "STRING") == 0) {
-        // 写入字符串
+        // 写入字符�?
         result = writeMem(*Exported.OpenedProcessHandle, (LPVOID)address, valueStr, strlen(valueStr) + 1, &bytesWritten);
     }
     
@@ -362,7 +362,7 @@ void ExecuteAICommand(AICommand* cmd) {
             char* instruction = strtok_s(NULL, ",", &context);
             if (instruction != NULL) {
                 UINT_PTR address = ParseAddress(addressStr);
-                BYTE output[16]; // 最大支持16字节指令
+                BYTE output[16]; // 最大支�?6字节指令
                 int returnedSize;
                 BOOL result = Exported.Assembler(address, instruction, output, sizeof(output), &returnedSize);
                 if (result) {
@@ -408,7 +408,7 @@ void ExecuteAICommand(AICommand* cmd) {
         }
     } else if (strcmp(cmd->command, "DISASSEMBLE_EX") == 0) {
         // 格式：DISASSEMBLE_EX:address
-        // 使用增强的反汇编功能，提供更详细的指令信息
+        // 使用增强的反汇编功能，提供更详细的指令信�?
         char* context = NULL;
         char* addressStr = strtok_s(cmd->parameters, ",", &context);
         if (addressStr != NULL) {
@@ -438,12 +438,12 @@ void ExecuteAICommand(AICommand* cmd) {
                     UINT_PTR address = ParseAddress(addressStr);
                     UINT_PTR value = ParseAddress(valueStr);
                     
-                    // 初始化寄存器修改结构体
+                    // 初始化寄存器修改结构�?
                     REGISTERMODIFICATIONINFO changereg;
                     ZeroMemory(&changereg, sizeof(changereg));
                     changereg.address = address;
                     
-                    // 设置要修改的寄存器
+                    // 设置要修改的寄存�?
                     BOOL regSet = FALSE;
                     if (strcmp(regName, "eax") == 0 || strcmp(regName, "EAX") == 0) {
                         changereg.change_eax = TRUE;
@@ -1545,7 +1545,7 @@ void __stdcall mainmenuplugin(void) {
     return;
 }
 
-    BOOL APIENTRY DllMain(HINSTANCE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
+BOOL APIENTRY DllMain(HINSTANCE hModule, DWORD ul_reason_for_call, LPVOID lpReserved) {
     switch (ul_reason_for_call) {
         case DLL_PROCESS_ATTACH:
             // Initialize Winsock when DLL is loaded
